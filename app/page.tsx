@@ -1,65 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { tokenize } from '@/processing/tokenize';
-
-const DOC = `Beautiful is better than ugly.
-Explicit is better than implicit.
-Simple is better than complex.
-Complex is better than complicated.
-Flat is better than nested.
-Sparse is better than dense.
-Readability counts.
-Special cases aren't special enough to break the rules.
-Although practicality beats purity.
-Errors should never pass silently.
-Unless explicitly silenced.
-In the face of ambiguity, refuse the temptation to guess.
-There should be one-- and preferably only one --obvious way to do it.
-Although that way may not be obvious at first unless you're Dutch.
-Now is better than never.
-Although never is often better than *right* now.
-If the implementation is hard to explain, it's a bad idea.
-If the implementation is easy to explain, it may be a good idea.
-Namespaces are one honking great idea -- let's do more of those!`;
+import ReaderContent from '@/components/ReaderContent';
+import ReaderControl from '@/components/ReaderControl';
+import Editor from '@/components/Editor';
 
 export default function Home() {
+  const [content, setContent] = useState<string>('');
   const [highlighted, setHighlighted] = useState<number>(0);
+  const [editing, setEditing] = useState<boolean>(true);
 
-  const tokens = tokenize(DOC);
-  const highlighted_text = tokens.slice(0, highlighted);
-  const non_highlighted_text = tokens.slice(highlighted);
+  useEffect(() => {
+    setHighlighted(0);
+  }, [content]);
+
+  const tokens = tokenize(content);
+  const highlighted_tokens = tokens.slice(0, highlighted);
+  const non_highlighted_tokens = tokens.slice(highlighted);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="border-solid border-2 border-gray col-span-2 p-2 rounded whitespace-pre-line">
-        {highlighted_text.map((word, index) => (
-          <span className="bg-yellow-300" key={index}>
-            {word}
-          </span>
-        ))}
-        {non_highlighted_text.map((word, index) => (
-          <span className="bg-gray-100" key={index}>
-            {word}
-          </span>
-        ))}
+    <div className="border-solid border-gray border-2 rounded">
+      <div className="grid grid-cols-2 border-b-2">
+        <button
+          type="button"
+          className={
+            editing ? 'border-solid border-gray border-b-2 bg-gray-100' : ''
+          }
+          onClick={() => setEditing(true)}
+        >
+          Edit
+        </button>
+        <button
+          type="button"
+          className={
+            !editing ? 'border-solid border-gray border-b-2 bg-gray-100' : ''
+          }
+          onClick={() => setEditing(false)}
+        >
+          Read
+        </button>
       </div>
-      <button
-        type="button"
-        className="rounded-full p-2 bg-orange-300"
-        onClick={() => setHighlighted((h) => (h - 1 < 0 ? h : h - 1))}
-      >
-        Back
-      </button>
-      <button
-        type="button"
-        className="rounded-full p-2 bg-blue-400"
-        onClick={() =>
-          setHighlighted((h) => (h + 1 > tokens.length ? h : h + 1))
-        }
-      >
-        Next
-      </button>
+      {editing ? (
+        <Editor content={content} setContent={setContent} />
+      ) : (
+        <div>
+          <ReaderContent
+            highlighted={highlighted_tokens}
+            non_highlighted={non_highlighted_tokens}
+          />
+          <ReaderControl
+            nextAction={() =>
+              setHighlighted(Math.min(highlighted + 1, tokens.length))
+            }
+            backAction={() => setHighlighted(Math.max(highlighted - 1, 0))}
+          />
+        </div>
+      )}
     </div>
   );
 }
