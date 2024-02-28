@@ -23,8 +23,6 @@ export default function Editor({
       placeholder="What would you like to read today?"
       value={content}
       onChange={(e) => setContent(e.target.value)}
-    >
-      {content}
-    </textarea>
+    />
   );
 }
