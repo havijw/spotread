@@ -4,8 +4,8 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 
 export const metadata: Metadata = {
-  title: 'SpeakLight',
-  description: 'Highlight text as you speak',
+  title: 'SpotRead',
+  description: 'Highlight text as you read',
 };
 
 export default function RootLayout({
