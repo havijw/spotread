@@ -1,12 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-export default function ReaderControl({
-  nextAction,
-  backAction,
-}: {
-  nextAction: () => void;
-  backAction: () => void;
-}) {
+const ButtonControl: ReaderControl = ({ nextAction, backAction }) => {
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
       switch (event.key) {
@@ -49,4 +43,6 @@ export default function ReaderControl({
       </button>
     </div>
   );
-}
+};
+
+export default ButtonControl;

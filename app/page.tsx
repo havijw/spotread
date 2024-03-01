@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { tokenize } from '@/processing/tokenize';
 import ReaderContent from '@/components/ReaderContent';
-import ReaderControl from '@/components/ReaderControl';
+import KeyboardControl from '@/components/controls/KeyboardControl';
 import Editor from '@/components/Editor';
 
 export default function Home() {
@@ -49,11 +49,14 @@ export default function Home() {
             highlighted={highlighted_tokens}
             non_highlighted={non_highlighted_tokens}
           />
-          <ReaderControl
+          <KeyboardControl
             nextAction={() =>
               setHighlighted(Math.min(highlighted + 1, tokens.length))
             }
             backAction={() => setHighlighted(Math.max(highlighted - 1, 0))}
+            nextToken={
+              non_highlighted_tokens.length > 0 ? non_highlighted_tokens[0] : ''
+            }
           />
         </div>
       )}
